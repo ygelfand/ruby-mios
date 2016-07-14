@@ -4,8 +4,8 @@ module MiOS
 
       URN = 'urn:micasaverde-com:serviceId:AlarmPartition2'
 
-      def arm!(mode="Armed", async=false, options = {} , &block)
-        set(URN, 'RequestArmMode', {'State' => mode, 'PINCode' => options[:pin] }, async, &block)
+      def arm!(mode="Armed", async=false, quick: false, pin: nil , &block)
+        set(URN, quick ? 'RequestQuickArmMode' : 'RequestArmMode', {'State' => mode, 'PINCode' => pin }, async, &block)
       end
 
       def disarm!(pin, async=false, &block)
@@ -15,12 +15,19 @@ module MiOS
       def panic!(mode='Fire', async=false, &block)
         set(URN, 'RequestPanicMode', {'State' => mode}, async, &block)
       end
-      def armed?
-        value_for(URN, 'ArmMode', as: String) == 'Armed'
+
+      def current_mode
+        value_for(URN, 'ArmMode', as: String)
       end
+
+      def armed?
+        current_mode == 'Armed'
+      end
+
       def disarmed?
         !armed?
       end
+
     end
   end
 end
