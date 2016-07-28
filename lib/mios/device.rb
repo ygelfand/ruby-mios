@@ -61,7 +61,7 @@ module MiOS
 
     def services
       states.map { |state|
-        state['service'].split(':').last.gsub(/[^a-zA-Z0-9]/, '')
+        state['service'].split(':').last.gsub(/[^a-zA-Z0-9]/, '').sub(/\S/, &:upcase)
       }.uniq
     end
 
